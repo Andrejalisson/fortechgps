@@ -14,7 +14,7 @@ Route::get('/EsqueceuSenha', [AcessoController::class, 'forgot']);
 Route::post('/EsqueceuSenha', [AcessoController::class, 'forgotPost']);
 Route::post('/Verifica', [AcessoController::class, 'verifica'])->name('login');
 Route::get('/Recuperar/{token}', [AcessoController::class, 'verificaToken']);
-Route::post('/Recuperar', [AcessoController::class, 'novasenha']);
+Route::post('/Recuperar/{token}', [AcessoController::class, 'novaSenha']);
 Route::get('/Sair', [AcessoController::class, 'logout']);
 
 

@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class AcessoController extends Controller{
     public function login(Request $request){
         if (Auth::check()) {
-            $request->session()->flash('sucesso', 'Até Logo!');
+            $request->session()->flash('sucesso', 'Bem vindo novamente!');
             return redirect('/Dashboard');
         }
         $title = "Login";
@@ -31,6 +31,7 @@ class AcessoController extends Controller{
             'email' => 'required|email|exists:users',
         ]);
         $token = Str::random(64);
+        DB::delete('delete from password_resets where email = ?',[$request->email]);
         DB::table('password_resets')->insert(
             ['email' => $request->email, 'token' => $token, 'created_at' => Carbon::now()]
         );
@@ -39,9 +40,30 @@ class AcessoController extends Controller{
         $uses->name = $usuario->name;
         $uses->email = $request->email;
         $uses->token = $token;
-
         Mail::send(new \App\Mail\ForgotMail($uses));
         return redirect('/Login');
+    }
+
+    public function verificaToken($token){
+        $users = DB::select('select * from password_resets where token = ?',[$token]);
+        $horas = Carbon::now()->diffInHours($users[0]->created_at);
+        if($horas > 24){
+            $title = "Token Expirado?";
+            return view('acesso.expirado')->with(compact('title'));
+        }else{
+            $title = "Nova senha";
+            return view('acesso.novasenha')->with(compact('title','token'));
+        }
+    }
+
+    public function novaSenha(Request $request, $token){
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+        $users = DB::select('select * from password_resets where token = ?',[$token]);
+        User::where('email', '=',$users[0]->email)->update(['password' => Hash::make(Input::get('password'))]);
+        
 
 
     }
