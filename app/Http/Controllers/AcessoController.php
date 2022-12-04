@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class AcessoController extends Controller{
     public function login(Request $request){
@@ -63,7 +64,7 @@ class AcessoController extends Controller{
         ]);
         $users = DB::select('select * from password_resets where token = ?',[$token]);
         User::where('email', '=',$users[0]->email)->update(['password' => Hash::make(Input::get('password'))]);
-        
+
 
 
     }
@@ -71,7 +72,16 @@ class AcessoController extends Controller{
     public function verifica(Request $request){
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password], false)) {
             $request->session()->flash('sucesso', 'Bom trabalho!');
-            return redirect('/Dashboard');
+
+            $response = Http::accept('application/json')->post('https://public-api.softruck.com/api/v1/auth/login', [
+                'username' => 'andrejalisson',
+                'password' => 'Aa@31036700.',
+            ]);
+            $token = json_decode($response->body());
+            foreach ($token as $dados) {
+                $request->session()->put('tokenSoftruck', $dados->token);
+            }
+            return redirect('/Empresas');
         }
     }
 

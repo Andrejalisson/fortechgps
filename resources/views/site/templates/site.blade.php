@@ -48,7 +48,7 @@
             <div class="container clearfix">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="logo-box clearfix">
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="/">
                         <img src="/site/images/resources/logo-1-1.png" class="main-logo" alt="Fortech GPS LOGO"/>
                         <img src="/site/images/resources/logo-1-2.png" class="stricky-logo" alt="Fortech GPS LOGO"/>
                     </a>

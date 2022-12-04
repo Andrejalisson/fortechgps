@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0fd2e93a95b0e17fe15e2a9c8fa78a16",
+    "content-hash": "3a3c9692da245910b0d1e5a56b842cbe",
     "packages": [
         {
             "name": "brick/math",
@@ -65,6 +65,55 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
+        },
+        {
+            "name": "codephix/asaas-sdk",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codephix/asaas-sdk.git",
+                "reference": "37049fd012cdecd092b0ffce59826289780d2f33"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codephix/asaas-sdk/zipball/37049fd012cdecd092b0ffce59826289780d2f33",
+                "reference": "37049fd012cdecd092b0ffce59826289780d2f33",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CodePhix\\Asaas\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Max Alex",
+                    "email": "contato@codephix.com",
+                    "homepage": "https://www.codephix.com"
+                }
+            ],
+            "description": "Asaas.com PHP API Wrapper",
+            "homepage": "http://www.codephix.com",
+            "keywords": [
+                "Asaas",
+                "Payment SaaS",
+                "api",
+                "boleto",
+                "credit card"
+            ],
+            "support": {
+                "issues": "https://github.com/codephix/asaas-sdk/issues",
+                "source": "https://github.com/codephix/asaas-sdk/tree/v2.0.5"
+            },
+            "time": "2022-03-15T03:32:52+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -572,16 +621,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.4.5",
+            "version": "7.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82"
+                "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
-                "reference": "1dd98b0564cb3f6bd16ce683cb755f94c10fbd82",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/b50a2a1251152e43f6a37f0fa053e730a67d25ba",
+                "reference": "b50a2a1251152e43f6a37f0fa053e730a67d25ba",
                 "shasum": ""
             },
             "require": {
@@ -596,10 +645,10 @@
                 "psr/http-client-implementation": "1.0"
             },
             "require-dev": {
-                "bamarni/composer-bin-plugin": "^1.4.1",
+                "bamarni/composer-bin-plugin": "^1.8.1",
                 "ext-curl": "*",
                 "php-http/client-integration-tests": "^3.0",
-                "phpunit/phpunit": "^8.5.5 || ^9.3.5",
+                "phpunit/phpunit": "^8.5.29 || ^9.5.23",
                 "psr/log": "^1.1 || ^2.0 || ^3.0"
             },
             "suggest": {
@@ -609,8 +658,12 @@
             },
             "type": "library",
             "extra": {
+                "bamarni-bin": {
+                    "bin-links": true,
+                    "forward-command": false
+                },
                 "branch-alias": {
-                    "dev-master": "7.4-dev"
+                    "dev-master": "7.5-dev"
                 }
             },
             "autoload": {
@@ -676,7 +729,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.4.5"
+                "source": "https://github.com/guzzle/guzzle/tree/7.5.0"
             },
             "funding": [
                 {
@@ -692,7 +745,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-20T22:16:13+00:00"
+            "time": "2022-08-28T15:39:27+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2940,6 +2993,65 @@
                 }
             ],
             "time": "2022-03-27T21:42:02+00:00"
+        },
+        {
+            "name": "softr/asaas-php-sdk",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/softr/asaas-php-sdk.git",
+                "reference": "44c7645fabe86b189fdbafd82cc5d3e19c5617ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/softr/asaas-php-sdk/zipball/44c7645fabe86b189fdbafd82cc5d3e19c5617ca",
+                "reference": "44c7645fabe86b189fdbafd82cc5d3e19c5617ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "guzzle/guzzle": "~3.7",
+                "guzzlehttp/guzzle": "~5.0|~6.0",
+                "kriswallsmith/buzz": "~0.10"
+            },
+            "suggest": {
+                "guzzle/guzzle": "To use GuzzleAdapter, require guzzle/guzzle:~3.7.",
+                "guzzlehttp/guzzle": "To use GuzzleHttpAdapter, require guzzlehttp/guzzle:~5.0|~6.0.",
+                "kriswallsmith/buzz": "To use BuzzAdapter, require kriswallsmith/buzz:~0.10."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Softr\\Asaas\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Agência Softr",
+                    "email": "agencia.softr@gmail.com",
+                    "homepage": "http://www.softr.com.br"
+                }
+            ],
+            "description": "Asaas.com PHP API Wrapper",
+            "homepage": "https://github.com/softr/asaas-php-sdk",
+            "keywords": [
+                "Asaas",
+                "Payment SaaS",
+                "api",
+                "boleto",
+                "credit card"
+            ],
+            "support": {
+                "issues": "https://github.com/softr/asaas-php-sdk/issues",
+                "source": "https://github.com/softr/asaas-php-sdk/tree/master"
+            },
+            "time": "2016-03-14T19:50:25+00:00"
         },
         {
             "name": "symfony/console",
