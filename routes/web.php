@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\AcessoController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CobrancasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnterpriseController;
 
@@ -47,11 +48,23 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/Clientes/Editar/{id}', 'editarPost');
     });
 
+    Route::controller(CobrancasController::class)->group(function () {
+        Route::get('/Cobrancas', 'lista');
+        Route::post('/todasCobrancas', 'todasCobrancas')->name('todasCobrancas');
+        Route::get('/Cobrancas/Atualiza', 'atualiza');
+        Route::get('/Cobrancas/Adicionar', 'add');
+        Route::post('/Cobrancas/Adicionar', 'addPost');
+        Route::get('/Cobrancas/Editar/{id}', 'editar');
+        Route::post('/Cobrancas/Editar/{id}', 'editarPost');
+    });
+
 
 });
 
 
-
+Route::controller(CobrancasController::class)->group(function () {
+    Route::get('/Cobrancas/Atualizar', 'atualiza');
+});
 
 
 
