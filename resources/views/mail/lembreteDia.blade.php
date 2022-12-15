@@ -131,7 +131,7 @@
                                                 <div style="font-family: Arial, sans-serif">
                                                     <div class="txtTinyMce-wrapper" style="font-size: 12px; font-family: 'Cabin', Arial, 'Helvetica Neue', Helvetica, sans-serif; mso-line-height-alt: 18px; color: #393d47; line-height: 1.5;">
                                                         <p style="margin: 0; text-align: center; mso-line-height-alt: 27px;"><span style="font-size:18px;color:#2455be;">Sabemos que na correria do dia a dia, pode acontecer de esquecermos alguns compromissos.</span></p>
-                                                        <p style="margin: 0; text-align: center; mso-line-height-alt: 27px;"><span style="font-size:18px;color:#2455be;">Então, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês vence daqui a 5 dia!.</span></p>
+                                                        <p style="margin: 0; text-align: center; mso-line-height-alt: 27px;"><span style="font-size:18px;color:#2455be;">Então, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês vence hoje!.</span></p>
                                                     </div>
                                                 </div>
                                             </td>

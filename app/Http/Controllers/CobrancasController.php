@@ -8,6 +8,7 @@ use App\Models\Cliente;
 use Illuminate\Support\Facades\Http;
 use CodePhix\Asaas\Asaas;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CobrancasController extends Controller{
@@ -21,7 +22,29 @@ class CobrancasController extends Controller{
         return view('mail.lembreteCincoDias')->with(compact('title'));
     }
 
+    public function emails(){
+        $dias = date('Y-m-d', strtotime("+5 days"));
+        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , $dias)->where('status', "PENDING")->get();
+        foreach ($cobrancas as $cobrancas) {
+            $cobranca = new \stdClass();
+            $primeiroNome = explode(" ", $cobrancas->name);
+            $cobranca->name = $primeiroNome[0];
+            $cobranca->email = $cobrancas->email;
+            $cobranca->link = $cobrancas->invoiceUrl;
+            Mail::send(new \App\Mail\LembreteCincoDias($cobranca));
+        }
+        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
+        foreach ($cobrancas as $cobrancas) {
+            $cobranca = new \stdClass();
+            $primeiroNome = explode(" ", $cobrancas->name);
+            $cobranca->name = $primeiroNome[0];
+            $cobranca->email = $cobrancas->email;
+            $cobranca->link = $cobrancas->invoiceUrl;
+            Mail::send(new \App\Mail\LembreteDia($cobranca));
+        }
+        echo "email enviados";
 
+    }
 
     public function atualiza(Request $request){
 

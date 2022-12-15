@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/Cobrancas/Adicionar', 'addPost');
         Route::get('/Cobrancas/Editar/{id}', 'editar');
         Route::post('/Cobrancas/Editar/{id}', 'editarPost');
-        Route::get('/Cobrancas/Email', 'email');
+        Route::get('/Cobrancas/Email', 'emails');
     });
 
 
