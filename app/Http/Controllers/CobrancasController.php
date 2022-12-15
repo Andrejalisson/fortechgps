@@ -14,9 +14,15 @@ class CobrancasController extends Controller{
     public function lista(){
         $title = "Cobrancas";
         return view('cobrancas.lista')->with(compact('title'));
-
-
     }
+
+    public function email(){
+        $title = "Cobrancas";
+        return view('mail.lembreteCincoDias')->with(compact('title'));
+    }
+
+
+
     public function atualiza(Request $request){
 
        $asaas = new Asaas(env('API_ASSAS'), 'producao');
@@ -148,6 +154,8 @@ class CobrancasController extends Controller{
 
 
     }
+
+
 
     public function todasCobrancas(Request $request){
         $columns = array(

@@ -132,7 +132,7 @@
             var pendente = false
         }
         $('#cobrancas').dataTable({
-                "pageLength": 100,
+                "pageLength": 10,
                 "responsive": true,
                 "processing": true,
                 "order": [[ 2, "ASC" ]],
@@ -237,7 +237,7 @@
             var pendente = false
         }
         $('#cobrancas').dataTable({
-                "pageLength": 100,
+                "pageLength": 10,
                 "responsive": true,
                 "processing": true,
                 "order": [[ 2, "ASC" ]],
