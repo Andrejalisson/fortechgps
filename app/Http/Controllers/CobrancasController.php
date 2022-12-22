@@ -32,6 +32,7 @@ class CobrancasController extends Controller{
             $cobranca->email = $cobrancas->email;
             $cobranca->link = $cobrancas->invoiceUrl;
             Mail::send(new \App\Mail\LembreteCincoDias($cobranca));
+            echo "email enviado para ".$cobrancas->name."\n";
         }
         $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
         foreach ($cobrancas as $cobrancas) {
@@ -41,9 +42,18 @@ class CobrancasController extends Controller{
             $cobranca->email = $cobrancas->email;
             $cobranca->link = $cobrancas->invoiceUrl;
             Mail::send(new \App\Mail\LembreteDia($cobranca));
+            echo "email enviado para ".$cobrancas->name."\n";
         }
-        echo "email enviados";
-
+        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->where('status', "OVERDUE")->get();
+        foreach ($cobrancas as $cobrancas) {
+            $cobranca = new \stdClass();
+            $primeiroNome = explode(" ", $cobrancas->name);
+            $cobranca->name = $primeiroNome[0];
+            $cobranca->email = $cobrancas->email;
+            $cobranca->link = $cobrancas->invoiceUrl;
+            Mail::send(new \App\Mail\LembreteAtrasado($cobranca));
+            echo "email enviado para ".$cobrancas->name."\n";
+        }
     }
 
     public function atualiza(Request $request){

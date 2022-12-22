@@ -167,7 +167,7 @@ class EnterpriseController extends Controller{
                     "fantasy_name" => $request->razaosocial,
                     "cnpj" => $request->cnpj,
                     "email" => $request->email,
-                    "timezone" => "America/Sao-paulo",
+                    "timezone" => "America/Sao_Paulo",
                     "phone1" => $telefone,
                     "theft_emergency_tel" => $request->central,
                     "assistance_emergency_tel" => $request->assistencia,
