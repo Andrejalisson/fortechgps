@@ -38,6 +38,7 @@ class EmailsAtrasados extends Command
             Mail::send(new \App\Mail\LembreteAtrasado($cobranca));
             $informação = "Email de cobrança atrasada enviado para ".$cobrancas->name;
             $this->info($informação);
+            sleep(3);
         }
     }
 }

@@ -27,7 +27,7 @@ class LembreteAtrasado extends Mailable
      */
     public function build(){
         $this->subject("Fatura Disponível - Fortech GPS");
-        $this->to("andrejalisson@gmail.com", $this->cobranca->name);
+        $this->to($this->cobranca->email, $this->cobranca->name);
         return $this->view('mail.lembreteAtrasado',[
             'cobranca' => $this->cobranca
         ]);

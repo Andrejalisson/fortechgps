@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('emails:atrasados')->dailyAt('8:00');
+         $schedule->command('emails:atrasados')->twiceMonthly(5, 10, 15, 20, 25, 30, '08:00');
     }
 
     /**
