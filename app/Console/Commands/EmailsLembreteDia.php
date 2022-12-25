@@ -3,33 +3,31 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Cobrancas;
-use App\Models\Logs;
-use Illuminate\Support\Facades\Mail;
 
-class EmailsAtrasados extends Command
+class EmailsLembreteDia extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'emails:atrasados';
+    protected $signature = 'emails:lembreteDia';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Emails Atrasados';
+    protected $description = 'Lembrete de pagamento do dia!';
 
     /**
      * Execute the console command.
      *
      * @return int
      */
-    public function handle(){
-        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->where('status', "OVERDUE")->get();
+    public function handle()
+    {
+        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
         foreach ($cobrancas as $cobrancas) {
             if ($cobrancas->email =! null) {
                 $cobranca = new \stdClass();
@@ -37,21 +35,19 @@ class EmailsAtrasados extends Command
                 $cobranca->name = $primeiroNome[0];
                 $cobranca->email = $cobrancas->email;
                 $cobranca->link = $cobrancas->invoiceUrl;
-                Mail::send(new \App\Mail\LembreteAtrasado($cobranca));
-                $informação = "Email de cobrança atrasada enviado para ".$cobrancas->name;
+                Mail::send(new \App\Mail\LembreteDia($cobranca));
+                $informação = "Email de lembrete do dia enviado para ".$cobrancas->name;
                 $logs = new Logs;
                 $logs->log = $informação;
                 $logs->save();
                 $this->info($informação);
                 sleep(1);
             }else{
-                $informação = "Email de cobrança atrasada não enviado para ".$cobrancas->name." Falta de email no cadastro";
+                $informação = "Email de lembrete do dia não enviado para ".$cobrancas->name.", Falta de email no cadastro";
                 $logs = new Logs;
                 $logs->log = $informação;
                 $logs->save();
                 $this->info($informação);
             }
-
-        }
     }
 }
