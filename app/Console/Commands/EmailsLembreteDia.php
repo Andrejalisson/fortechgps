@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\Cobrancas;
+use App\Models\Logs;
+use Illuminate\Support\Facades\Mail;
 
 class EmailsLembreteDia extends Command
 {
@@ -25,8 +28,7 @@ class EmailsLembreteDia extends Command
      *
      * @return int
      */
-    public function handle()
-    {
+    public function handle(){
         $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
         foreach ($cobrancas as $cobrancas) {
             if ($cobrancas->email =! null) {
@@ -49,5 +51,6 @@ class EmailsLembreteDia extends Command
                 $logs->save();
                 $this->info($informação);
             }
+        }
     }
 }
