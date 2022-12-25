@@ -31,7 +31,8 @@ class EmailsLembreteDia extends Command
     public function handle(){
         $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
         foreach ($cobrancas as $cobrancas) {
-            if ($cobrancas->email =! null) {
+            $existe = $cobrancas->email;
+            if ($existe =! null) {
                 $cobranca = new \stdClass();
                 $primeiroNome = explode(" ", $cobrancas->name);
                 $cobranca->name = $primeiroNome[0];
