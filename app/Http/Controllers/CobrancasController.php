@@ -76,21 +76,31 @@ class CobrancasController extends Controller{
         $clientes = $asaas->Cliente()->getAll($filtro);
         foreach($clientes->data as $dados){
             $existe = Cliente::where("cpfCnpj", $dados->cpfCnpj)->first();
+            $celular = trim($dados->mobilePhone);
+            $celular = str_replace("(", "", $celular);
+            $celular = str_replace(")", "", $celular);
+            $celular = str_replace("-", "", $celular);
+            $celular = str_replace(" ", "", $celular);
+            $telefone = trim($dados->phone);
+            $telefone = str_replace("(", "", $telefone);
+            $telefone = str_replace(")", "", $telefone);
+            $telefone = str_replace("-", "", $telefone);
+            $telefone = str_replace(" ", "", $telefone);
             if ($existe == null) {
                 $cliente = new Cliente;
-                $cliente->name = $dados->name;
+                $cliente->name              = $dados->name;
                 $cliente->externalReference = $dados->id;
-                $cliente->cpfCnpj = $dados->cpfCnpj;
-                $cliente->email = $dados->email;
-                $cliente->phone = $dados->phone;
-                $cliente->mobilePhone = $dados->mobilePhone;
-                $cliente->address = $dados->address;
-                $cliente->addressNumber = $dados->addressNumber;
-                $cliente->complement = $dados->complement;
-                $cliente->province = $dados->province;
-                $cliente->postalCode = $dados->postalCode;
-                $cliente->state = $dados->state;
-                $cliente->observations = $dados->observations;
+                $cliente->cpfCnpj           = $dados->cpfCnpj;
+                $cliente->email             = $dados->email;
+                $cliente->phone             = $telefone;
+                $cliente->mobilePhone       = $celular;
+                $cliente->address           = $dados->address;
+                $cliente->addressNumber     = $dados->addressNumber;
+                $cliente->complement        = $dados->complement;
+                $cliente->province          = $dados->province;
+                $cliente->postalCode        = $dados->postalCode;
+                $cliente->state             = $dados->state;
+                $cliente->observations      = $dados->observations;
                 $cliente->save();
                 $id = $cliente->id;
             }else{
