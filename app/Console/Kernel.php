@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
          $schedule->command('emails:atrasados')->twiceMonthly(5, 10, 15, 20, 25, 30, '08:00');
          $schedule->command('emails:lembreteDia')->dailyAt('07:00');
          $schedule->command('emails:lembrete5Dia')->dailyAt('07:30');
+         $schedule->command('atualiza:cobrancas')->dailyAt('06:30');
     }
 
     /**

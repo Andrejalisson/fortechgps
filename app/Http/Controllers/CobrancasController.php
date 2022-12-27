@@ -24,31 +24,42 @@ class CobrancasController extends Controller{
     }
 
     public function emails(){
+        $asaas = new Asaas(env('API_ASSAS'), 'producao');
+        $filtro = array(
+            'limit' => 100,
+        );
+        $cobrancas = $asaas->Cobranca()->getAll($filtro);
+        // dd($cobrancas);
+        foreach ($cobrancas->data as $cobranca) {
+            $fatura = Cobrancas::where('externalReference', $cobranca->id)->first();
+            $quantidade = Cobrancas::where('externalReference', $cobranca->id)->count();
+            if ($quantidade > 0) {
+                $cliente = Cliente::where('externalReference', $cobranca->customer)->first();
+                if($cobranca->status =! $fatura->status) {
+                    switch ($cobranca->status) {
+                        case 'RECEIVED':
+                            $wpp =  "Cliente ".$cliente->name." Pagou a fatura no dia ".date('d/m/Y',  strtotime($cobranca->clientPaymentDate))."\n Valor Líguido: R$ ".number_format($cobranca->netValue, 2, ',', '.');
+                            break;
+                        case 'CONFIRMED':
+                            $wpp =  "Cliente ".$cliente->name." Pagou a fatura no dia ".date('d/m/Y',  strtotime($cobranca->clientPaymentDate))."\n Valor Líguido: R$ ".number_format($cobranca->netValue, 2, ',', '.');
+                            break;
+                        case 'OVERDUE':
+                            $wpp =  "Cliente ".$cliente->name." Não pagou a fatura do dia ".date('d/m/Y',  strtotime($cobranca->dueDate))."\n Valor Líguido: R$ ".number_format($cobranca->netValue, 2, ',', '.');
+                            break;
 
-        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , date('Y-m-d'))->where('status', "PENDING")->get();
-        foreach ($cobrancas as $cobrancas) {
-            $existe = $cobrancas->email;
-            if ($existe =! null) {
-                $cobranca = new \stdClass();
-                $primeiroNome = explode(" ", $cobrancas->name);
-                $cobranca->name = $primeiroNome[0];
-                $cobranca->email = $cobrancas->email;
-                $cobranca->link = $cobrancas->invoiceUrl;
-                Mail::send(new \App\Mail\LembreteCincoDias($cobranca));
-                $informação = "Email de Lembrete 5 dias enviado para ".$cobrancas->name;
-                $logs = new Logs;
-                $logs->log = $informação;
-                $logs->save();
-                echo $informação;
-                sleep(1);
-            }else{
-                $informação = "Email de Lembrete 5 dias não enviado para ".$cobrancas->name." Falta de email no cadastro";
-                $logs = new Logs;
-                $logs->log = $informação;
-                $logs->save();
-                echo $informação;
+                        default:
+                            $wpp = "A cobrança veio diferente ".$cobranca->status." do cliente ".$cliente->name;
+                            break;
+                    }
+                    Http::withHeaders([
+                        'sessionkey' => '31036700'
+                    ])->post(env('API_WPP')."/sendText", [
+                        'session' => env('SESSION_WPP'),
+                        'number' => '558585965372',
+                        'text' => $wpp
+                    ]);
+                }
             }
-
         }
     }
 
