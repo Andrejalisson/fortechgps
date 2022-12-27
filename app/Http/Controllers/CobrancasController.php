@@ -29,7 +29,7 @@ class CobrancasController extends Controller{
             'limit' => 100,
         );
         $cobrancas = $asaas->Cobranca()->getAll($filtro);
-        // dd($cobrancas);
+        dd($cobrancas);
         foreach ($cobrancas->data as $cobranca) {
             $fatura = Cobrancas::where('externalReference', $cobranca->id)->first();
             $quantidade = Cobrancas::where('externalReference', $cobranca->id)->count();
