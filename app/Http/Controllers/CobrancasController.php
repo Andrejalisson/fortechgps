@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Logs;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class CobrancasController extends Controller{
     public function lista(){
@@ -319,5 +320,265 @@ class CobrancasController extends Controller{
             "data"            => $data
         );
         echo json_encode($json_data);
+    }
+
+    public function webhook(Request $request){
+        $json = $request->all();
+        $cobranca = (object)$json;
+
+        $cliente = Cliente::where('externalReference', $cobranca->payment['customer'])->first();
+        if($cliente == null){
+            $asaas = new Asaas(env('API_ASSAS'), 'producao');
+            $dados = $asaas->Cliente()->getById($cobranca->payment['customer']);
+            $cliente = new Cliente;
+            $cliente->name              = $dados->name;
+            $cliente->externalReference = $dados->id;
+            $cliente->cpfCnpj           = $dados->cpfCnpj;
+            $cliente->email             = $dados->email;
+            $cliente->phone             = $dados->phone;
+            $cliente->mobilePhone       = $dados->mobilePhone;
+            $cliente->address           = $dados->address;
+            $cliente->addressNumber     = $dados->addressNumber;
+            $cliente->complement        = $dados->complement;
+            $cliente->province          = $dados->province;
+            $cliente->postalCode        = $dados->postalCode;
+            $cliente->state             = $dados->state;
+            $cliente->observations      = $dados->observations;
+            $cliente->save();
+            $mensagem = "O cliente ".$cliente->name." acabou de ser cadastrado no sistema";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+            $cliente = Cliente::where('externalReference', $cobranca->payment['customer'])->first();
+        }
+        switch ($cobranca->event) {
+            case 'PAYMENT_CREATED': //Geração de nova cobrança.
+                $mensagem = "Uma nova cobrança foi criada do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.');
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_AWAITING_RISK_ANALYSIS': //Pagamento em cartão aguardando aprovação pela análise manual de risco.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito está em análise manual de risco.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_APPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão aprovado pela análise manual de risco.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi aprovada pela análise manual de risco.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_REPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão reprovado pela análise manual de risco.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi reprovada pela análise manual de risco.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_UPDATED': //Alteração no vencimento ou valor de cobrança existente.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve uma alteração manual no valor ou vencimento.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_CONFIRMED': //Cobrança confirmada (pagamento efetuado, porém o saldo ainda não foi disponibilizado).
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga via cartão de crédito, precisa fazer a antecipação do valor.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_RECEIVED': //Cobrança recebida.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+
+                break;
+            case 'PAYMENT_OVERDUE': //Cobrança vencida.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." venceu e não foi identificado pagamento até então.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_DELETED': //Cobrança removida.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi removida do sistema.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_RESTORED': //Cobrança restaurada.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi restaurada no sistema.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_REFUNDED': //Cobrança estornada.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi estornada.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_RECEIVED_IN_CASH_UNDONE': //Recebimento em dinheiro desfeito.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi desfeito o recebimento manual.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_CHARGEBACK_REQUESTED': //Recebido chargeback.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o valor creditado depois de ganharmos a disputa.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_CHARGEBACK_DISPUTE': //Em disputa de chargeback (caso sejam apresentados documentos para contestação).
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve dispulta solicitada.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL': //Disputa vencida, aguardando repasse da adquirente.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o prazo de disputa encerrado, aguardando o repasse.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_DUNNING_RECEIVED': //Recebimento de negativação.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." que estava negativado no SERASA, teve o pagamento efetuado.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_DUNNING_REQUESTED': //Requisição de negativação.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve a solicitação de negativação no SERASA.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_BANK_SLIP_VIEWED': //Boleto da cobrança visualizado pelo cliente.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o boleto gerado pelo cliente.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+            case 'PAYMENT_CHECKOUT_VIEWED': //Fatura da cobrança visualizada pelo cliente.
+                $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi visualizada.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                break;
+
+            default:
+                # code...
+                break;
+        }
+        $fatura = Cobrancas::where('cobrancas.externalReference', $cobranca->payment['id'])->first();
+        $fatura->externalReference      =   $cobranca->payment['id'];
+        $fatura->paymentLink            =   $cobranca->payment['paymentLink'];
+        $fatura->value                  =   $cobranca->payment['value'];
+        $fatura->netValue               =   $cobranca->payment['netValue'];
+        $fatura->originalValue          =   $cobranca->payment['originalValue'];
+        $fatura->interestValue          =   $cobranca->payment['interestValue'];
+        $fatura->description            =   $cobranca->payment['description'];
+        $fatura->status                 =   $cobranca->payment['status'];
+        $fatura->dueDate                =   $cobranca->payment['dueDate'];
+        $fatura->originalDueDate        =   $cobranca->payment['originalDueDate'];
+        $fatura->billingType            =   $cobranca->payment['billingType'];
+        $fatura->installmentNumber      =   $cobranca->payment['installmentNumber'];
+        $fatura->invoiceUrl             =   $cobranca->payment['invoiceUrl'];
+        $fatura->invoiceNumber          =   $cobranca->payment['invoiceNumber'];
+        $fatura->deleted                =   $cobranca->payment['deleted'];
+        $fatura->anticipated            =   $cobranca->payment['anticipated'];
+        $fatura->anticipable            =   $cobranca->payment['anticipable'];
+        $fatura->creditDate             =   $cobranca->payment['creditDate'];
+        $fatura->estimatedCreditDate    =   $cobranca->payment['estimatedCreditDate'];
+        $fatura->transactionReceiptUrl  =   $cobranca->payment['transactionReceiptUrl'];
+        $fatura->bankSlipUrl            =   $cobranca->payment['bankSlipUrl'];
+        $fatura->description            =   $cobranca->payment['description'];
+        $fatura->postalService          =   $cobranca->payment['postalService'];
+        $fatura->save();
+        return response()->json([
+            'message' => 'Ok'
+        ], 200);
     }
 }

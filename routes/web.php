@@ -65,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::controller(CobrancasController::class)->group(function () {
     Route::get('/Cobrancas/Atualizar', 'atualiza');
+    Route::post('/Cobrancas/Webhook', 'webhook');
 });
 
 
