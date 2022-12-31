@@ -553,6 +553,9 @@ class CobrancasController extends Controller{
                 break;
         }
         $fatura = Cobrancas::where('cobrancas.externalReference', $cobranca->payment['id'])->first();
+        if ($fatura == null) {
+            $fatura = new Cobrancas;
+        }
         $fatura->externalReference      =   $cobranca->payment['id'];
         $fatura->paymentLink            =   $cobranca->payment['paymentLink'];
         $fatura->value                  =   $cobranca->payment['value'];
