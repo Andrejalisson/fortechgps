@@ -415,6 +415,15 @@ class CobrancasController extends Controller{
                     'number' => '558585965372',
                     'text' => $mensagem
                 ]);
+                $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '5585'.substr($cliente->mobilePhone,3),
+                    'text' => $mensagem
+                ]);
+
                 break;
             case 'PAYMENT_RECEIVED': //Cobrança recebida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga.";
@@ -423,6 +432,14 @@ class CobrancasController extends Controller{
                 ])->post(env('API_WPP')."/sendText", [
                     'session' => env('SESSION_WPP'),
                     'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '5585'.substr($cliente->mobilePhone,3),
                     'text' => $mensagem
                 ]);
 
@@ -434,6 +451,14 @@ class CobrancasController extends Controller{
                 ])->post(env('API_WPP')."/sendText", [
                     'session' => env('SESSION_WPP'),
                     'number' => '558585965372',
+                    'text' => $mensagem
+                ]);
+                $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nSabemos que na correria do dia a dia pode acontecer de esquecermos alguns compromissos.\nEntão, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês *encontra-se vencida.*\n\nmportante lembrar que a *inadimplência* resulta na aplicação de *multa e juros* sobre o valor devido, além do *bloqueio do seu rastreamento* e a impossibilidade de solicitação de assistência 24h.";
+                Http::withHeaders([
+                    'sessionkey' => 'Aa@31036700.'
+                ])->post(env('API_WPP')."/sendText", [
+                    'session' => env('SESSION_WPP'),
+                    'number' => '5585'.substr($cliente->mobilePhone,3),
                     'text' => $mensagem
                 ]);
                 break;
