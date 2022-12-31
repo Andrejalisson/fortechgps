@@ -19,10 +19,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-         $schedule->command('emails:atrasados')->twiceMonthly(5, 10, 15, 20, 25, 30, '08:00');
+
          $schedule->command('emails:lembreteDia')->dailyAt('07:00');
          $schedule->command('emails:lembrete5Dia')->dailyAt('07:30');
          $schedule->command('atualiza:cobrancas')->dailyAt('06:30');
+         $schedule->command('wpp:lembrete5dias')->dailyAt('08:05');
+         $schedule->command('emails:atrasados')->twiceMonthly(5, 10, 15, 20, 25, 30, '08:00');
+         $schedule->command('wpp:atrasadas')->twiceMonthly(5, 10, 15, 20, 25, 30,'08:10');
+
     }
 
     /**
