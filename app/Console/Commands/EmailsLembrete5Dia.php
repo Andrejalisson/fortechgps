@@ -40,18 +40,23 @@ class EmailsLembrete5Dia extends Command
                 $cobranca->email = $cobrancas->email;
                 $cobranca->link = $cobrancas->invoiceUrl;
                 Mail::send(new \App\Mail\LembreteCincoDias($cobranca));
-                $informação = "Email de Lembrete 5 dias enviado para ".$cobrancas->name;
+                $informacao = "Email de Lembrete 5 dias enviado para ".$cobrancas->name;
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($informacao,$marcelo);
+                wppTexto($informacao,$andre);
+                $this->info("Mensagem enviada: ". $cobrancas->name);
                 $logs = new Logs;
-                $logs->log = $informação;
+                $logs->log = $informacao;
                 $logs->save();
-                $this->info($informação);
+                $this->info($informacao);
                 sleep(1);
             }else{
-                $informação = "Email de Lembrete 5 dias não enviado para ".$cobrancas->name." Falta de email no cadastro";
+                $informacao = "Email de Lembrete 5 dias não enviado para ".$cobrancas->name." Falta de email no cadastro";
                 $logs = new Logs;
-                $logs->log = $informação;
+                $logs->log = $informacao;
                 $logs->save();
-                $this->info($informação);
+                $this->info($informacao);
             }
 
         }

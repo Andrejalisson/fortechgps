@@ -12,3 +12,14 @@ function wppTexto($mensagem, $numero){
         'text' => $mensagem
     ]);
 }
+
+function wppLink($link, $descricao, $numero){
+    Http::withHeaders([
+        'sessionkey' => 'Aa@31036700.'
+    ])->post(env('API_WPP')."/sendLink", [
+        'session' => env('SESSION_WPP'),
+        'number' => '5585'.substr($numero,3),
+        'url' => $link,
+        'text' => $descricao
+    ]);
+}

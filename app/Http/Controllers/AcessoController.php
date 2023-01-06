@@ -83,6 +83,8 @@ class AcessoController extends Controller{
             }
             return redirect('/Empresas');
         }
+        $request->session()->flash('atencao', 'Email ou senha incorretos.');
+        return redirect()->back();
     }
 
 

@@ -9,6 +9,7 @@
 		<link href="/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 		<link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
 		<link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/assets/js/iziToast/dist/css/iziToast.min.css">
         @yield('css')
 	</head>
 	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
@@ -315,7 +316,41 @@
 		<script src="/assets/js/custom/utilities/modals/upgrade-plan.js"></script>
 		<script src="/assets/js/custom/utilities/modals/create-app.js"></script>
 		<script src="/assets/js/custom/utilities/modals/users-search.js"></script>
+        <script src="/assets/js/iziToast/dist/js/iziToast.min.js" type="text/javascript"></script>
         @yield('js')
         @yield('script')
+        @if (session('sucesso'))
+            <script>
+                iziToast.success({
+                    title: 'Sucesso',
+                    message: "{{session('sucesso')}}"
+                });
+            </script>
+        @endif
+        @if (session('erro'))
+            <script>
+                iziToast.error({
+                    title: 'Erro',
+                    message: "{{session('erro')}}"
+                });
+            </script>
+        @endif
+        @if (session('atencao'))
+            <script>
+                iziToast.warning({
+                    title: 'Atenção',
+                    message: "{{session('atencao')}}"
+                });
+            </script>
+        @endif
+        @if (session('informacao'))
+            <script>
+                iziToast.info({
+                    title: 'Informação',
+                    message: "{{session('informacao')}}"
+                });
+            </script>
+        @endif
+
 	</body>
 </html>

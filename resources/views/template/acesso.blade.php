@@ -20,6 +20,7 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="/assets/js/iziToast/dist/css/iziToast.min.css">
     <!--end::Global Stylesheets Bundle-->
 </head>
 <!--end::Head-->
@@ -62,6 +63,7 @@
 <!--begin::Global Javascript Bundle(used by all pages)-->
 <script src="/assets/plugins/global/plugins.bundle.js"></script>
 <script src="/assets/js/scripts.bundle.js"></script>
+<script src="/assets/js/iziToast/dist/js/iziToast.min.js" type="text/javascript"></script>
 <!--end::Global Javascript Bundle-->
 
 
