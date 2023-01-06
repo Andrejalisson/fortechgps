@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(CobrancasController::class)->group(function () {
         Route::get('/Cobrancas', 'lista');
+        Route::get('/Cobrancas/Notificacao/{id}', 'notificacao');
         Route::post('/todasCobrancas', 'todasCobrancas')->name('todasCobrancas');
         Route::get('/Cobrancas/Atualiza', 'atualiza');
         Route::get('/Cobrancas/Adicionar', 'add');
@@ -66,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
 Route::controller(CobrancasController::class)->group(function () {
     Route::get('/Cobrancas/Atualizar', 'atualiza');
     Route::post('/Cobrancas/Webhook', 'webhook');
+    Route::get('/Cobrancas/notificacao', 'notificacao');
 });
 
 

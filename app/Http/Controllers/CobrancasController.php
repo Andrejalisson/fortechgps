@@ -307,8 +307,8 @@ class CobrancasController extends Controller{
                         break;
                 }
 
-                $nestedData['opcoes'] = "<a href=\"#\" class=\"btn btn-icon btn-success\"><i class=\"fas fa-eye fs-4 me-2\"></i></a>
-                <a href=\"/Clientes/Editar/".$cobranca->id."\" class=\"btn btn-icon btn-warning\"><i class=\"fas fa-pen fs-4 me-2\"></i></a>";
+                $nestedData['opcoes'] = "<a href=\"/Cobrancas/Notificacao/".$cobranca->id."\" class=\"btn btn-icon btn-success\"><i class=\"far fa-paper-plane\"></i></a>
+                                        <a href=\"/Cobrancas/Editar/".$cobranca->id."\" class=\"btn btn-icon btn-warning\"><i class=\"fas fa-pen fs-4 me-2\"></i></a>";
 
                 $data[] = $nestedData;
             }
@@ -325,7 +325,6 @@ class CobrancasController extends Controller{
     public function webhook(Request $request){
         $json = $request->all();
         $cobranca = (object)$json;
-
         $cliente = Cliente::where('externalReference', $cobranca->payment['customer'])->first();
         if($cliente == null){
             $asaas = new Asaas(env('API_ASSAS'), 'producao');
@@ -346,231 +345,153 @@ class CobrancasController extends Controller{
             $cliente->observations      = $dados->observations;
             $cliente->save();
             $mensagem = "O cliente ".$cliente->name." acabou de ser cadastrado no sistema";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+            $marcelo = "85988173101";
+            $andre = "85985965372";
+            wppTexto($mensagem,$marcelo);
+            wppTexto($mensagem,$andre);
             $cliente = Cliente::where('externalReference', $cobranca->payment['customer'])->first();
         }
         switch ($cobranca->event) {
             case 'PAYMENT_CREATED': //Geração de nova cobrança.
                 $mensagem = "Uma nova cobrança foi criada do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.');
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_AWAITING_RISK_ANALYSIS': //Pagamento em cartão aguardando aprovação pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito está em análise manual de risco.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_APPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão aprovado pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi aprovada pela análise manual de risco.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_REPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão reprovado pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi reprovada pela análise manual de risco.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_UPDATED': //Alteração no vencimento ou valor de cobrança existente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve uma alteração manual no valor ou vencimento.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CONFIRMED': //Cobrança confirmada (pagamento efetuado, porém o saldo ainda não foi disponibilizado).
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga via cartão de crédito, precisa fazer a antecipação do valor.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '5585'.substr($cliente->mobilePhone,3),
-                    'text' => $mensagem
-                ]);
+                wppTexto($mensagem,$cliente->mobilePhone);
 
                 break;
             case 'PAYMENT_RECEIVED': //Cobrança recebida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '5585'.substr($cliente->mobilePhone,3),
-                    'text' => $mensagem
-                ]);
+                wppTexto($mensagem,$cliente->mobilePhone);
 
                 break;
             case 'PAYMENT_OVERDUE': //Cobrança vencida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." venceu e não foi identificado pagamento até então.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
-                $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nSabemos que na correria do dia a dia pode acontecer de esquecermos alguns compromissos.\nEntão, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês *encontra-se vencida.*\n\nmportante lembrar que a *inadimplência* resulta na aplicação de *multa e juros* sobre o valor devido, além do *bloqueio do seu rastreamento* e a impossibilidade de solicitação de assistência 24h.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '5585'.substr($cliente->mobilePhone,3),
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
+                $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nSabemos que na correria do dia a dia pode acontecer de esquecermos alguns compromissos.\nEntão, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês *encontra-se vencida.*\n\nImportante lembrar que a *inadimplência* resulta na aplicação de *multa e juros* sobre o valor devido, além do *bloqueio do seu rastreamento* e a impossibilidade de solicitação de assistência 24h.";
+                wppTexto($mensagem,$cliente->mobilePhone);
                 break;
             case 'PAYMENT_DELETED': //Cobrança removida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi removida do sistema.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_RESTORED': //Cobrança restaurada.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi restaurada no sistema.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_REFUNDED': //Cobrança estornada.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi estornada.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_RECEIVED_IN_CASH_UNDONE': //Recebimento em dinheiro desfeito.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi desfeito o recebimento manual.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHARGEBACK_REQUESTED': //Recebido chargeback.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o valor creditado depois de ganharmos a disputa.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHARGEBACK_DISPUTE': //Em disputa de chargeback (caso sejam apresentados documentos para contestação).
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve dispulta solicitada.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL': //Disputa vencida, aguardando repasse da adquirente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o prazo de disputa encerrado, aguardando o repasse.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_DUNNING_RECEIVED': //Recebimento de negativação.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." que estava negativado no SERASA, teve o pagamento efetuado.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_DUNNING_REQUESTED': //Requisição de negativação.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve a solicitação de negativação no SERASA.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_BANK_SLIP_VIEWED': //Boleto da cobrança visualizado pelo cliente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o boleto gerado pelo cliente.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHECKOUT_VIEWED': //Fatura da cobrança visualizada pelo cliente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi visualizada.";
-                Http::withHeaders([
-                    'sessionkey' => 'Aa@31036700.'
-                ])->post(env('API_WPP')."/sendText", [
-                    'session' => env('SESSION_WPP'),
-                    'number' => '558585965372',
-                    'text' => $mensagem
-                ]);
+                $marcelo = "85988173101";
+                $andre = "85985965372";
+                wppTexto($mensagem,$marcelo);
+                wppTexto($mensagem,$andre);
                 break;
 
             default:
@@ -608,5 +529,12 @@ class CobrancasController extends Controller{
         return response()->json([
             'message' => 'Ok'
         ], 200);
+    }
+
+    public function notificacao(){
+        $mensagem = "A cobrança do cliente";
+        $numero = "558585965372";
+        wppTexto($mensagem,$numero);
+
     }
 }

@@ -182,32 +182,32 @@
 											<span class="menu-icon">
 												<i class="fas fa-briefcase"></i>
 											</span>
-											<span class="menu-title">Empresas</span>
+											<span class="menu-title">Organização</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<div class="menu-sub menu-sub-accordion">
+											<div class="menu-item">
+												<a class="menu-link" href="/Chips">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Chips</span>
+												</a>
+											</div>
+											<div class="menu-item">
+												<a class="menu-link" href="#">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Dispositivos</span>
+												</a>
+											</div>
 											<div class="menu-item">
 												<a class="menu-link" href="/Empresas">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Listar</span>
-												</a>
-											</div>
-											<div class="menu-item">
-												<a class="menu-link" href="/Empresas/Adicionar">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Adicionar</span>
-												</a>
-											</div>
-											<div class="menu-item">
-												<a class="menu-link" href="/ImportarEmpresas">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Importar Softruck</span>
+													<span class="menu-title">Empresas</span>
 												</a>
 											</div>
 										</div>
