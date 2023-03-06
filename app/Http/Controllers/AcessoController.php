@@ -15,7 +15,7 @@ class AcessoController extends Controller{
     public function login(Request $request){
         if (Auth::check()) {
             $request->session()->flash('sucesso', 'Bem vindo novamente!');
-            return redirect('/Dashboard');
+            return redirect('/DashBoard');
         }
         $title = "Login";
         return view('acesso.login')->with(compact('title'));
@@ -81,7 +81,7 @@ class AcessoController extends Controller{
             foreach ($token as $dados) {
                 $request->session()->put('tokenSoftruck', $dados->token);
             }
-            return redirect('/Empresas');
+            return redirect('/DashBoard');
         }
         $request->session()->flash('atencao', 'Email ou senha incorretos.');
         return redirect()->back();

@@ -33,6 +33,7 @@ return new class extends Migration
             $table->string('assas_id', 20)->nullable();
             $table->string('softruck_id', 40)->nullable();
             $table->text('observations')->nullable()->default('Sem observações');
+            $table->string('logo', 27)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

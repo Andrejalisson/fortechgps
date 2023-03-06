@@ -38,11 +38,6 @@ class Envia5dias extends Command
             wppTexto($wpp, $cliente->mobilePhone);
             $texto = "";
             wppLink($fatura->invoiceUrl,$texto, $cliente->mobilePhone);
-            $mensagem = "O lembrete do cliente ".$cliente->name." foi enviado via Whatsapp";
-            $marcelo = "85988173101";
-            $andre = "85985965372";
-            wppTexto($mensagem,$marcelo);
-            wppTexto($mensagem,$andre);
             $this->info("Mensagem enviada: ". $cliente->name);
         }
     }

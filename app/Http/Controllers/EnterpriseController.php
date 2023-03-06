@@ -27,6 +27,13 @@ class EnterpriseController extends Controller{
         return view('empresas.editar')->with(compact('title', 'empresa'));
     }
 
+    public function view($id){
+        $title = "Ver Empresa";
+        $empresa = Enterprise::find($id);
+        return view('empresas.view')->with(compact('title', 'empresa'));
+    }
+
+
     public function todasEmpresas(Request $request){
         $columns = array(
             0 =>'fantasy_name',
@@ -61,7 +68,7 @@ class EnterpriseController extends Controller{
                 $nestedData['cnpj'] = preg_replace("/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/", "\$1.\$2.\$3/\$4-\$5", $empresa->cnpj);
                 $nestedData['contato'] = preg_replace("/(\d{2})(\d{1})(\d{4})(\d{4})/", "(\$1)\$2 \$3-\$4", $empresa->phone1);
                 $nestedData['email'] = $empresa->email;
-                $nestedData['opcoes'] = "<a href=\"#\" class=\"btn btn-icon btn-success\"><i class=\"fas fa-eye fs-4 me-2\"></i></a>
+                $nestedData['opcoes'] = "<a href=\"/Empresas/Perfil/".$empresa->id."\" class=\"btn btn-icon btn-success\"><i class=\"fas fa-eye fs-4 me-2\"></i></a>
                                         <a href=\"/Empresas/Editar/".$empresa->id."\" class=\"btn btn-icon btn-warning\"><i class=\"fas fa-pen fs-4 me-2\"></i></a>";
 
                 $data[] = $nestedData;
@@ -95,7 +102,6 @@ class EnterpriseController extends Controller{
             $resp = curl_exec($curl);
             curl_close($curl);
             $dados = json_decode($resp);
-
             if($enterprise == null){
                 $empresa = new Enterprise();
                 $empresa->name = $empresas->name;
@@ -104,13 +110,13 @@ class EnterpriseController extends Controller{
                 $empresa->softruck_id = $empresas->uuid;
                 $empresa->email = $empresas->email;
                 $empresa->phone = $empresas->phone1;
-                $empresa->postalCode = $dados->estabelecimento->cep;
-                $empresa->address = $dados->estabelecimento->tipo_logradouro.": ".$dados->estabelecimento->logradouro;
-                $empresa->addressNumber = $dados->estabelecimento->numero;
-                $empresa->complement = $dados->estabelecimento->complemento;
-                $empresa->province = $dados->estabelecimento->bairro;
-                $empresa->city = $dados->estabelecimento->cidade->nome;
-                $empresa->state = $dados->estabelecimento->estado->sigla;
+                // $empresa->postalCode = $dados->estabelecimento->cep;
+                // $empresa->address = $dados->estabelecimento->tipo_logradouro.": ".$dados->estabelecimento->logradouro;
+                // $empresa->addressNumber = $dados->estabelecimento->numero;
+                // $empresa->complement = $dados->estabelecimento->complemento;
+                // $empresa->province = $dados->estabelecimento->bairro;
+                // $empresa->city = $dados->estabelecimento->cidade->nome;
+                // $empresa->state = $dados->estabelecimento->estado->sigla;
                 $empresa->theft_emergency_tel = $empresas->theft_emergency_tel;
                 $empresa->assistance_emergency_tel = $empresas->assistance_emergency_tel;
                 $empresa->save();

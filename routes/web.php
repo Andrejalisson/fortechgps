@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/todasEmpresas', 'todasEmpresas')->name('todasEmpresas');
         Route::get('/Empresas/Adicionar', 'add');
         Route::post('/Empresas/Adicionar', 'addPost');
+        Route::get('/Empresas/Perfil/{id}', 'view');
         Route::get('/Empresas/Editar/{id}', 'editar');
         Route::post('/Empresas/Editar/{id}', 'editarPost');
     });

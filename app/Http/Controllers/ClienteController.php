@@ -98,7 +98,6 @@ class ClienteController extends Controller{
             $empresas = Http::withToken($request->session()->get('tokenSoftruck'))->post(env('API_SOFTRUCK').'/users', $data);
             $json_str = $empresas->body();
             $jsonObj = json_decode($json_str);
-            dd($jsonObj);
             $dados = json_encode($jsonObj->data->uuid);
             $empresass = Cliente::find($id);
             $empresass->softruck_id = json_decode($dados);
@@ -171,7 +170,7 @@ class ClienteController extends Controller{
                     //dd($cobrancas);
                     $cobranca->save();
                 }else{
-                    dd($cobrancas);
+                    //dd($cobrancas);
                 }
 
             }

@@ -40,10 +40,6 @@ class EmailsAtrasados extends Command
                 $cobranca->link = $cobrancas->invoiceUrl;
                 Mail::send(new \App\Mail\LembreteAtrasado($cobranca));
                 $informacao = "Email de cobrança atrasada enviado para ".$cobrancas->name;
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($informacao,$marcelo);
-                wppTexto($informacao,$andre);
                 $this->info("Mensagem enviada: ". $cobrancas->name);
                 $logs = new Logs;
                 $logs->log = $informacao;

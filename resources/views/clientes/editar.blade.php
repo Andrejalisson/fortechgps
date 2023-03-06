@@ -12,7 +12,7 @@
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">{{$title}}</h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="/Empresas" class="text-muted text-hover-primary">Empresas</a>
+                            <a href="/Empresas" class="text-muted text-hover-primary">Clientes</a>
                         </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-400 w-5px h-2px"></span>
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                     <div id="kt_account_settings_profile_details" class="collapse show">
-                        <form class="form" method="POST" action="/Empresas/Editar/{{$empresa->id}}">
+                        <form class="form" method="POST" action="/Clientes/Editar/{{$empresa->id}}">
                             @csrf
                             <div class="card-body border-top p-9">
                                 <div class="row mb-6">
