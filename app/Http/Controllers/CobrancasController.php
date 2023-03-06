@@ -354,144 +354,68 @@ class CobrancasController extends Controller{
         switch ($cobranca->event) {
             case 'PAYMENT_CREATED': //Geração de nova cobrança.
                 $mensagem = "Uma nova cobrança foi criada do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.');
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_AWAITING_RISK_ANALYSIS': //Pagamento em cartão aguardando aprovação pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito está em análise manual de risco.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_APPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão aprovado pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi aprovada pela análise manual de risco.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_REPROVED_BY_RISK_ANALYSIS': //Pagamento em cartão reprovado pela análise manual de risco.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." paga via cartão de crédito foi reprovada pela análise manual de risco.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_UPDATED': //Alteração no vencimento ou valor de cobrança existente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve uma alteração manual no valor ou vencimento.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CONFIRMED': //Cobrança confirmada (pagamento efetuado, porém o saldo ainda não foi disponibilizado).
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga via cartão de crédito, precisa fazer a antecipação do valor.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
                 wppTexto($mensagem,$cliente->mobilePhone);
 
                 break;
             case 'PAYMENT_RECEIVED': //Cobrança recebida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi paga.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nEstamos muito felizes em informá-lo(a) que *seu pagamento foi confirmado!!!*\nMuito obrigado por confiar na gente, e continuar mais um mês conosco!\nTenha um ótimo dia, e *MUITO OBRIGADO!!!* 💙💙";
                 wppTexto($mensagem,$cliente->mobilePhone);
 
                 break;
             case 'PAYMENT_OVERDUE': //Cobrança vencida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." venceu e não foi identificado pagamento até então.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 $mensagem = "Oi ".$cliente->name.", tudo bem? 🤩\nSabemos que na correria do dia a dia pode acontecer de esquecermos alguns compromissos.\nEntão, com o intuito de te ajudar, vinhemos lembrar que a sua fatura deste mês *encontra-se vencida.*\n\nImportante lembrar que a *inadimplência* resulta na aplicação de *multa e juros* sobre o valor devido, além do *bloqueio do seu rastreamento* e a impossibilidade de solicitação de assistência 24h.";
                 wppTexto($mensagem,$cliente->mobilePhone);
                 break;
             case 'PAYMENT_DELETED': //Cobrança removida.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi removida do sistema.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_RESTORED': //Cobrança restaurada.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi restaurada no sistema.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_REFUNDED': //Cobrança estornada.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi estornada.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_RECEIVED_IN_CASH_UNDONE': //Recebimento em dinheiro desfeito.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi desfeito o recebimento manual.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHARGEBACK_REQUESTED': //Recebido chargeback.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o valor creditado depois de ganharmos a disputa.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHARGEBACK_DISPUTE': //Em disputa de chargeback (caso sejam apresentados documentos para contestação).
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve dispulta solicitada.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_AWAITING_CHARGEBACK_REVERSAL': //Disputa vencida, aguardando repasse da adquirente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o prazo de disputa encerrado, aguardando o repasse.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_DUNNING_RECEIVED': //Recebimento de negativação.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." que estava negativado no SERASA, teve o pagamento efetuado.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_DUNNING_REQUESTED': //Requisição de negativação.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve a solicitação de negativação no SERASA.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_BANK_SLIP_VIEWED': //Boleto da cobrança visualizado pelo cliente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." teve o boleto gerado pelo cliente.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
             case 'PAYMENT_CHECKOUT_VIEWED': //Fatura da cobrança visualizada pelo cliente.
                 $mensagem = "A cobrança do cliente ".$cliente->name." no valor de R$".number_format($cobranca->payment['value'], 2, ',', '.')." foi visualizada.";
-                $marcelo = "85988173101";
-                $andre = "85985965372";
-                wppTexto($mensagem,$marcelo);
-                wppTexto($mensagem,$andre);
                 break;
 
             default:
