@@ -40,10 +40,6 @@ class EmailsLembreteDia extends Command
                 $cobranca->link = $cobrancas->invoiceUrl;
                 Mail::send(new \App\Mail\LembreteDia($cobranca));
                 $this->info("Mensagem enviada: ". $cobrancas->name);
-                $logs = new Logs;
-                $logs->log = $informacao;
-                $logs->save();
-                $this->info($informacao);
                 sleep(1);
             }else{
                 $informacao = "Email de lembrete do dia não enviado para ".$cobrancas->name.", Falta de email no cadastro";

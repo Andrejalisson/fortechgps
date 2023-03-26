@@ -30,7 +30,7 @@ class EmailsLembrete5Dia extends Command
      */
     public function handle(){
         $dias = date('Y-m-d', strtotime("+5 days"));
-        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , $dias)->where('status', "PENDING")->get();
+        $cobrancas = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "<=" , $dias)->where('status', "PENDING")->get();
         foreach ($cobrancas as $cobrancas) {
             $existe = $cobrancas->email;
             if ($existe =! null) {
@@ -41,10 +41,6 @@ class EmailsLembrete5Dia extends Command
                 $cobranca->link = $cobrancas->invoiceUrl;
                 Mail::send(new \App\Mail\LembreteCincoDias($cobranca));
                 $this->info("Mensagem enviada: ". $cobrancas->name);
-                $logs = new Logs;
-                $logs->log = $informacao;
-                $logs->save();
-                $this->info($informacao);
                 sleep(1);
             }else{
                 $informacao = "Email de Lembrete 5 dias não enviado para ".$cobrancas->name." Falta de email no cadastro";
