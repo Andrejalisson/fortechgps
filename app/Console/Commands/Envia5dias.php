@@ -31,7 +31,7 @@ class Envia5dias extends Command
     public function handle()
     {
         $dias = date('Y-m-d', strtotime("+5 days"));
-        $fatura = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "<=" , $dias)->where('status', "PENDING")->get();
+        $fatura = Cobrancas::Join('clientes', 'clientes.id', '=', 'cobrancas.cliente_id')->whereDate('dueDate', "=" , $dias)->where('status', "PENDING")->get();
         foreach ($fatura as $fatura) {
             $cliente = Cliente::where('id', $fatura->cliente_id)->first();
             $wpp = "Olá ".$cliente->name.", tudo bem? 🤩 \nAqui é da *Fortech GPS*, pra nós é uma satisfação enorme tê-lo(a) como nosso cliente!  🚀🚀 \nEstamos te mandando essa mensagem, para lembrá-lo(a) que seu plano vence em 5 dias(".date('d/m/Y',  strtotime($fatura->dueDate))."), segue link para pagamento da cobrança";
