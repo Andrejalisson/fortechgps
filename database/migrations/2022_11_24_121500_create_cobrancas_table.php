@@ -42,7 +42,7 @@ return new class extends Migration
             $table->string('transactionReceiptUrl',100)->nullable();
             $table->string('nossoNumero',30)->nullable();
             $table->string('bankSlipUrl',100)->nullable();
-            $table->text('description')->default('Rastreamento veicular');
+            $table->text('description')->default('Rastreamento veicular')->nullable();
             $table->boolean('postalService')->default(false);
             $table->timestamps();
             $table->softDeletes();
